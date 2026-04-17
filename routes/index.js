@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var decorator = require("./renderDecorator");
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-    res.redirect("/board");
-    //res.render('index', { title: 'Express' });
+router.get('/', async function (req, res) {
+    await decorator.render(req, res, "home");
 });
 
 module.exports = router;

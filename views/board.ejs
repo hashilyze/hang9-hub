@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시판[<%=format_name%> | <%=category_name%>]</title>
+
+  <link rel="stylesheet" href="/stylesheets/board.css" />
+</head>
+
+<body>
+  <div class="dashboard">
+    <% include ./sidebar.html %>
+
+    <!--콘텐츠-->
+    <div class="main-section">
+      <!--헤더-->
+      <div class="header">
+        <!--로고-->
+        <div class="logo-wrapper">
+          <a href="/" style="position:relative;">
+            <img src="/images/logo4.png" style="width:400px; height:150px;">
+          </a>
+        </div>
+
+        <% include ./board_title.ejs%>
+
+        <%if(isPrivate){%>
+        <!--글쓰기 페이지로 이동-->
+        <div class="btnWrite">
+          <a class="write-text" href="/post/write">글쓰기</a>
+        </div>
+        <%}%>
+
+        <%include personalNav.ejs%>
+      </div> <!--헤더-->
+
+      <!--컬럼-->
+      <div class="column">
+        <%for(i = 1; i <= Math.min(3, posts.length); ++i){%>
+          <%let post = posts[i - 1];%>
+        <!--게시물-<%=i%>-->
+        <div class="element-<%=i%>">          
+          <div class="views_likes-wrapper">
+            <!--조회수-->
+            <div class="views-form">
+              <div class="text-wrapper"><%=post.views%></div>
+            </div>
+            <!--추천수-->
+            <div class="likes-form">
+              <div class="text-wrapper"><%=post.likes%></div>
+            </div>
+          </div>
+          <!--다운로드수-->
+          <div class="downloads-wrapper">
+            <div class="text-wrapper"><%=post.downloads%></div>
+          </div>
+          <!--게시일-->
+          <div class="created-wapper">
+            <div class="text-wrapper"><%=post.simpleCreated_at%></div>
+          </div>
+          <!--가격-->
+          <div class="price-wrapper">
+            <div class="text-wrapper">￦ <%=post.price%></div>
+          </div>
+          <!--작성자-->
+          <div class="writer-wrapper">
+            <div class="text-wrapper"><%=post.writer_name%></div>
+          </div>
+          <!--제목-->
+          <div class="title-wrapper">
+            <div class="text-wrapper"><a href="/post/read/<%=post.pid%>"><%=post.title%></a></div>
+          </div>
+
+          <a class="thumbnail" href="/post/read/<%=post.pid%>">
+            <%if(post.images && post.images.length > 0){%>
+              <img src="/uploads/<%=post.images[0]%>" width="298" height="298">
+            <%} else {%>
+              <img src="/images/no_image.png" width="298" height="298">
+            <%}%>
+          </a>
+        </div>
+        <%}%>
+      </div> <!--컬럼-->
+
+      <!--페이지 네비게이션-->
+      <div class="page-navigation">
+        <%let unit = 3;%>
+        <%if(offset >= unit){%>
+        <!--이전 페이지로 이동-->
+        <div class="btnPrev-wrapper">
+          <div class="btnPage-form">
+            <a class="page-text" href="/post/board?format_name=<%=format_name%>&category_name=<%=category_name%>&limit=<%=unit+1%>&offset=<%=offset - unit%>">
+              이전페이지
+            </a>
+          </div>
+        </div>
+        <%}%>
+        <%if(posts && posts.length > unit){%>
+        <!--다음 페이지로 이동-->
+        <div class="btnNext-wrapper">
+          <div class="btnPage-form">
+            <a class="page-text" href="/post/board?format_name=<%=format_name%>&category_name=<%=category_name%>&limit=<%=unit+1%>&offset=<%=offset + unit%>">
+              다음페이지
+            </a>
+          </div>
+        </div>
+        <%}%>
+      </div> <!--페이지 네비게이션-->
+
+    </div> <!--콘텐츠-->
+  </div>
+</body>
+
+</html>
